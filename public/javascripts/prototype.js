@@ -1458,7 +1458,7 @@ Ajax.Base = Class.create({
     this.options = {
       method:       'post',
       asynchronous: true,
-      contentType:  'application/x-www-form-urlencoded',
+      contentType:  'application/x-www-form-urencoded',
       encoding:     'UTF-8',
       parameters:   '',
       evalJSON:     true,
@@ -1477,14 +1477,14 @@ Ajax.Base = Class.create({
 Ajax.Request = Class.create(Ajax.Base, {
   _complete: false,
 
-  initialize: function($super, url, options) {
+  initialize: function($super, ur, options) {
     $super(options);
     this.transport = Ajax.getTransport();
-    this.request(url);
+    this.request(ur);
   },
 
-  request: function(url) {
-    this.url = url;
+  request: function(ur) {
+    this.ur = ur;
     this.method = this.options.method;
     var params = Object.clone(this.options.parameters);
 
@@ -1497,7 +1497,7 @@ Ajax.Request = Class.create(Ajax.Base, {
 
     if (params = Object.toQueryString(params)) {
       if (this.method == 'get')
-        this.url += (this.url.include('?') ? '&' : '?') + params;
+        this.ur += (this.ur.include('?') ? '&' : '?') + params;
       else if (/Konqueror|Safari|KHTML/.test(navigator.userAgent))
         params += '&_=';
     }
@@ -1507,7 +1507,7 @@ Ajax.Request = Class.create(Ajax.Base, {
       if (this.options.onCreate) this.options.onCreate(response);
       Ajax.Responders.dispatch('onCreate', this, response);
 
-      this.transport.open(this.method.toUpperCase(), this.url,
+      this.transport.open(this.method.toUpperCase(), this.ur,
         this.options.asynchronous);
 
       if (this.options.asynchronous) this.respondToReadyState.bind(this).defer(1);
@@ -1612,7 +1612,7 @@ Ajax.Request = Class.create(Ajax.Base, {
   },
 
   isSameOrigin: function() {
-    var m = this.url.match(/^\s*https?:\/\/[^\/]*/);
+    var m = this.ur.match(/^\s*https?:\/\/[^\/]*/);
     return !m || (m[0] == '#{protocol}//#{domain}#{port}'.interpolate({
       protocol: location.protocol,
       domain: document.domain,
@@ -1726,7 +1726,7 @@ Ajax.Response = Class.create({
 });
 
 Ajax.Updater = Class.create(Ajax.Request, {
-  initialize: function($super, container, url, options) {
+  initialize: function($super, container, ur, options) {
     this.container = {
       success: (container.success || container),
       failure: (container.failure || (container.success ? null : container))
@@ -1739,7 +1739,7 @@ Ajax.Updater = Class.create(Ajax.Request, {
       if (Object.isFunction(onComplete)) onComplete(response, json);
     }).bind(this);
 
-    $super(url, options);
+    $super(ur, options);
   },
 
   updateContent: function(responseText) {
@@ -1762,7 +1762,7 @@ Ajax.Updater = Class.create(Ajax.Request, {
 });
 
 Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
-  initialize: function($super, container, url, options) {
+  initialize: function($super, container, ur, options) {
     $super(options);
     this.onComplete = this.options.onComplete;
 
@@ -1771,7 +1771,7 @@ Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
 
     this.updater = { };
     this.container = container;
-    this.url = url;
+    this.ur = ur;
 
     this.start();
   },
@@ -1798,7 +1798,7 @@ Ajax.PeriodicalUpdater = Class.create(Ajax.Base, {
   },
 
   onTimerEvent: function() {
-    this.updater = new Ajax.Updater(this.container, this.url, this.options);
+    this.updater = new Ajax.Updater(this.container, this.ur, this.options);
   }
 });
 
@@ -4146,7 +4146,7 @@ Sizzle.find = function(expr, context, isXML){
 };
 
 Sizzle.filter = function(expr, set, inplace, not){
-	var old = expr, result = [], curLoop = set, match, anyFound,
+	var old = expr, result = [], curoop = set, match, anyFound,
 		isXMLFilter = set && set[0] && isXML(set[0]);
 
 	while ( expr && set.length ) {
@@ -4155,12 +4155,12 @@ Sizzle.filter = function(expr, set, inplace, not){
 				var filter = Expr.filter[ type ], found, item;
 				anyFound = false;
 
-				if ( curLoop == result ) {
+				if ( curoop == result ) {
 					result = [];
 				}
 
 				if ( Expr.preFilter[ type ] ) {
-					match = Expr.preFilter[ type ]( match, curLoop, inplace, result, not, isXMLFilter );
+					match = Expr.preFilter[ type ]( match, curoop, inplace, result, not, isXMLFilter );
 
 					if ( !match ) {
 						anyFound = found = true;
@@ -4170,16 +4170,16 @@ Sizzle.filter = function(expr, set, inplace, not){
 				}
 
 				if ( match ) {
-					for ( var i = 0; (item = curLoop[i]) != null; i++ ) {
+					for ( var i = 0; (item = curoop[i]) != null; i++ ) {
 						if ( item ) {
-							found = filter( item, match, i, curLoop );
+							found = filter( item, match, i, curoop );
 							var pass = not ^ !!found;
 
 							if ( inplace && found != null ) {
 								if ( pass ) {
 									anyFound = true;
 								} else {
-									curLoop[i] = false;
+									curoop[i] = false;
 								}
 							} else if ( pass ) {
 								result.push( item );
@@ -4191,7 +4191,7 @@ Sizzle.filter = function(expr, set, inplace, not){
 
 				if ( found !== undefined ) {
 					if ( !inplace ) {
-						curLoop = result;
+						curoop = result;
 					}
 
 					expr = expr.replace( Expr.match[ type ], "" );
@@ -4216,7 +4216,7 @@ Sizzle.filter = function(expr, set, inplace, not){
 		old = expr;
 	}
 
-	return curLoop;
+	return curoop;
 };
 
 var Expr = Sizzle.selectors = {
@@ -4339,20 +4339,20 @@ var Expr = Sizzle.selectors = {
 		}
 	},
 	preFilter: {
-		CLASS: function(match, curLoop, inplace, result, not, isXML){
+		CLASS: function(match, curoop, inplace, result, not, isXML){
 			match = " " + match[1].replace(/\\/g, "") + " ";
 
 			if ( isXML ) {
 				return match;
 			}
 
-			for ( var i = 0, elem; (elem = curLoop[i]) != null; i++ ) {
+			for ( var i = 0, elem; (elem = curoop[i]) != null; i++ ) {
 				if ( elem ) {
 					if ( not ^ (elem.className && (" " + elem.className + " ").indexOf(match) >= 0) ) {
 						if ( !inplace )
 							result.push( elem );
 					} else if ( inplace ) {
-						curLoop[i] = false;
+						curoop[i] = false;
 					}
 				}
 			}
@@ -4362,9 +4362,9 @@ var Expr = Sizzle.selectors = {
 		ID: function(match){
 			return match[1].replace(/\\/g, "");
 		},
-		TAG: function(match, curLoop){
-			for ( var i = 0; curLoop[i] === false; i++ ){}
-			return curLoop[i] && isXML(curLoop[i]) ? match[1] : match[1].toUpperCase();
+		TAG: function(match, curoop){
+			for ( var i = 0; curoop[i] === false; i++ ){}
+			return curoop[i] && isXML(curoop[i]) ? match[1] : match[1].toUpperCase();
 		},
 		CHILD: function(match){
 			if ( match[1] == "nth" ) {
@@ -4380,7 +4380,7 @@ var Expr = Sizzle.selectors = {
 
 			return match;
 		},
-		ATTR: function(match, curLoop, inplace, result, not, isXML){
+		ATTR: function(match, curoop, inplace, result, not, isXML){
 			var name = match[1].replace(/\\/g, "");
 
 			if ( !isXML && Expr.attrMap[name] ) {
@@ -4393,12 +4393,12 @@ var Expr = Sizzle.selectors = {
 
 			return match;
 		},
-		PSEUDO: function(match, curLoop, inplace, result, not){
+		PSEUDO: function(match, curoop, inplace, result, not){
 			if ( match[1] === "not" ) {
 				if ( ( chunker.exec(match[3]) || "" ).length > 1 || /^\w/.test(match[3]) ) {
-					match[3] = Sizzle(match[3], null, null, curLoop);
+					match[3] = Sizzle(match[3], null, null, curoop);
 				} else {
-					var ret = Sizzle.filter(match[3], curLoop, inplace, true ^ not);
+					var ret = Sizzle.filter(match[3], curoop, inplace, true ^ not);
 					if ( !inplace ) {
 						result.push.apply( result, ret );
 					}

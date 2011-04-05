@@ -28,7 +28,7 @@
 // Tokenized incremental autocompletion is enabled automatically
 // when an autocompleter is instantiated with the 'tokens' option
 // in the options parameter, e.g.:
-// new Ajax.Autocompleter('id','upd', '/url/', { tokens: ',' });
+// new Ajax.Autocompleter('id','upd', '/ur/', { tokens: ',' });
 // will incrementally autocomplete with a comma as the token.
 // Additionally, ',' in the above example can be replaced with
 // a token array, e.g. { tokens: [',', '\n'] } which
@@ -343,12 +343,12 @@ Autocompleter.Base.prototype.getTokenBounds.getFirstDifferencePos = function(new
 };
 
 Ajax.Autocompleter = Class.create(Autocompleter.Base, {
-  initialize: function(element, update, url, options) {
+  initialize: function(element, update, ur, options) {
     this.baseInitialize(element, update, options);
     this.options.asynchronous  = true;
     this.options.onComplete    = this.onComplete.bind(this);
     this.options.defaultParams = this.options.parameters || null;
-    this.url                   = url;
+    this.ur                   = ur;
   },
 
   getUpdatedChoices: function() {
@@ -363,7 +363,7 @@ Ajax.Autocompleter = Class.create(Autocompleter.Base, {
     if(this.options.defaultParams)
       this.options.parameters += '&' + this.options.defaultParams;
 
-    new Ajax.Request(this.url, this.options);
+    new Ajax.Request(this.ur, this.options);
   },
 
   onComplete: function(request) {
@@ -479,8 +479,8 @@ Field.scrollFreeActivate = function(field) {
 };
 
 Ajax.InPlaceEditor = Class.create({
-  initialize: function(element, url, options) {
-    this.url = url;
+  initialize: function(element, ur, options) {
+    this.ur = ur;
     this.element = element = $(element);
     this.prepareOptions();
     this._controls = { };
@@ -536,7 +536,7 @@ Ajax.InPlaceEditor = Class.create({
     }
   },
   createEditField: function() {
-    var text = (this.options.loadTextURL ? this.options.loadingText : this.getText());
+    var text = (this.options.loadTextur ? this.options.loadingText : this.getText());
     var fld;
     if (1 >= this.options.rows && !/\r|\n/.test(this.getText())) {
       fld = document.createElement('input');
@@ -554,7 +554,7 @@ Ajax.InPlaceEditor = Class.create({
     if (this.options.submitOnBlur)
       fld.onblur = this._boundSubmitHandler;
     this._controls.editor = fld;
-    if (this.options.loadTextURL)
+    if (this.options.loadTextur)
       this.loadExternalText();
     this._form.appendChild(this._controls.editor);
   },
@@ -595,7 +595,7 @@ Ajax.InPlaceEditor = Class.create({
     this.element.hide();
     this.createForm();
     this.element.parentNode.insertBefore(this._form, this.element);
-    if (!this.options.loadTextURL)
+    if (!this.options.loadTextur)
       this.postProcessEditField();
     if (e) Event.stop(e);
   },
@@ -634,7 +634,7 @@ Ajax.InPlaceEditor = Class.create({
         onComplete: this._boundWrapperHandler,
         onFailure: this._boundFailureHandler
       });
-      new Ajax.Updater({ success: this.element }, this.url, options);
+      new Ajax.Updater({ success: this.element }, this.ur, options);
     } else {
       var options = Object.extend({ method: 'get' }, this.options.ajaxOptions);
       Object.extend(options, {
@@ -642,7 +642,7 @@ Ajax.InPlaceEditor = Class.create({
         onComplete: this._boundWrapperHandler,
         onFailure: this._boundFailureHandler
       });
-      new Ajax.Request(this.url, options);
+      new Ajax.Request(this.ur, options);
     }
     if (e) Event.stop(e);
   },
@@ -683,7 +683,7 @@ Ajax.InPlaceEditor = Class.create({
       }.bind(this),
       onFailure: this._boundFailureHandler
     });
-    new Ajax.Request(this.options.loadTextURL, options);
+    new Ajax.Request(this.options.loadTextur, options);
   },
   postProcessEditField: function() {
     var fpc = this.options.fieldPostCreation;
@@ -754,9 +754,9 @@ Object.extend(Ajax.InPlaceEditor.prototype, {
 });
 
 Ajax.InPlaceCollectionEditor = Class.create(Ajax.InPlaceEditor, {
-  initialize: function($super, element, url, options) {
+  initialize: function($super, element, ur, options) {
     this._extraDefaultOptions = Ajax.InPlaceCollectionEditor.DefaultOptions;
-    $super(element, url, options);
+    $super(element, ur, options);
   },
 
   createEditField: function() {
@@ -765,7 +765,7 @@ Ajax.InPlaceCollectionEditor = Class.create(Ajax.InPlaceEditor, {
     list.size = 1;
     this._controls.editor = list;
     this._collection = this.options.collection || [];
-    if (this.options.loadCollectionURL)
+    if (this.options.loadCollectionur)
       this.loadCollection();
     else
       this.checkForExternalText();
@@ -788,7 +788,7 @@ Ajax.InPlaceCollectionEditor = Class.create(Ajax.InPlaceEditor, {
       }.bind(this),
       onFailure: this.onFailure
     });
-    new Ajax.Request(this.options.loadCollectionURL, options);
+    new Ajax.Request(this.options.loadCollectionur, options);
   },
 
   showLoadingText: function(text) {
@@ -805,7 +805,7 @@ Ajax.InPlaceCollectionEditor = Class.create(Ajax.InPlaceEditor, {
 
   checkForExternalText: function() {
     this._text = this.getText();
-    if (this.options.loadTextURL)
+    if (this.options.loadTextur)
       this.loadExternalText();
     else
       this.buildOptionList();
@@ -823,7 +823,7 @@ Ajax.InPlaceCollectionEditor = Class.create(Ajax.InPlaceEditor, {
       }.bind(this),
       onFailure: this.onFailure
     });
-    new Ajax.Request(this.options.loadTextURL, options);
+    new Ajax.Request(this.options.loadTextur, options);
   },
 
   buildOptionList: function() {

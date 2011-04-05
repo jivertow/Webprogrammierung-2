@@ -72,22 +72,22 @@
   }
 
   function handleRemote(element) {
-    var method, url, params;
+    var method, ur, params;
 
     var event = element.fire("ajax:before");
     if (event.stopped) return false;
 
     if (element.tagName.toLowerCase() === 'form') {
       method = element.readAttribute('method') || 'post';
-      url    = element.readAttribute('action');
+      ur    = element.readAttribute('action');
       params = element.serialize();
     } else {
       method = element.readAttribute('data-method') || 'get';
-      url    = element.readAttribute('href');
+      ur    = element.readAttribute('href');
       params = {};
     }
 
-    new Ajax.Request(url, {
+    new Ajax.Request(ur, {
       method: method,
       parameters: params,
       evalScripts: true,
@@ -102,11 +102,11 @@
 
   function handleMethod(element) {
     var method = element.readAttribute('data-method'),
-        url = element.readAttribute('href'),
+        ur = element.readAttribute('href'),
         csrf_param = $$('meta[name=csrf-param]')[0],
         csrf_token = $$('meta[name=csrf-token]')[0];
 
-    var form = new Element('form', { method: "POST", action: url, style: "display: none;" });
+    var form = new Element('form', { method: "POST", action: ur, style: "display: none;" });
     element.parentNode.insert(form);
 
     if (method !== 'post') {

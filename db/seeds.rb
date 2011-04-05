@@ -15,5 +15,5 @@ Product.create(:title => 'PProgramming Ruby 1.9',
 			there. If you need to get working programs delivered fast, you should
 			add Ruby to  your toolbox.
 		</p>},
-	:image_url => '/images/ruby.jpg',
+	:image_ur => '/images/ruby.jpg',
 	:price => 49.59)
