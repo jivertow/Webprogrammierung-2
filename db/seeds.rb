@@ -8,7 +8,7 @@
 
 Product.delete_all
 
-Product.create(:title => 'PProgramming Ruby 1.9',
+Product.create(:title => 'Programming Ruby 1.9',
 	:description =>
 		%{<p>
 			Ruby is the fastest growing and most exciting dynamic language out
