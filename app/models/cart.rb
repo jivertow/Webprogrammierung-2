@@ -9,6 +9,7 @@ class Cart < ActiveRecord::Base
 			current_item = LineItem.new(:product_id=>product_id)
 			line_items << current_item
 		end
+		current_item
 	end
 	
 	def total_price
